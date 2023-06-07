@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "34966377378",
+    "firebase_url": "https://ucascomunety-default-rtdb.firebaseio.com",
+    "project_id": "ucascomunety",
+    "storage_bucket": "ucascomunety.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:34966377378:android:78c7f6c6ca89ebe87198fb",
+        "android_client_info": {
+          "package_name": "com.example.aditest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnzLz2QrzhUaK57Qxc8Jt5mNWrmSk4AUE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:34966377378:android:51f6b13462b6534b7198fb",
+        "android_client_info": {
+          "package_name": "com.example.ucascomunetytest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnzLz2QrzhUaK57Qxc8Jt5mNWrmSk4AUE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:34966377378:android:469280bb2858e0e77198fb",
+        "android_client_info": {
+          "package_name": "com.example.ucasinsta62"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnzLz2QrzhUaK57Qxc8Jt5mNWrmSk4AUE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
