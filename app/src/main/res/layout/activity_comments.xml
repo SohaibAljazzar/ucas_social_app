@@ -12,7 +12,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="#efefef"
-        android:background="?android:attr/windowBackground"/>
+        android:background="?android:attr/windowBackground">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="Comments"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold"/>
+
+        </RelativeLayout>
+
+    </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
@@ -39,6 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/image_profile"
             android:hint="Add a comment..."
+            android:textColorHint="#A39D9D"
             android:id="@+id/add_comment"
             android:layout_centerVertical="true"
             android:layout_marginStart="10dp"

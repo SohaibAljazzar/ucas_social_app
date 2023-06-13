@@ -91,6 +91,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:hint="Full Name"
+            android:textColorHint="#A39D9D"
+            android:textColor="@color/colorBlack"
             android:id="@+id/fullname"
             />
 
@@ -98,6 +100,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Username"
+            android:textColorHint="#A39D9D"
+            android:textColor="@color/colorBlack"
             android:id="@+id/username"
             />
 
@@ -105,6 +109,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Bio"
+            android:textColorHint="#A39D9D"
+            android:textColor="@color/colorBlack"
             android:id="@+id/bio"
            />
 

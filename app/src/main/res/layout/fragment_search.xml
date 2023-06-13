@@ -31,6 +31,7 @@
                 android:layout_marginLeft="10dp"
                 android:id="@+id/search_bar"
                 android:hint="Search..."
+                android:textColorHint="#A39D9D"
                 android:textColor="@color/colorBlack"
                 android:layout_marginStart="10dp" />
 

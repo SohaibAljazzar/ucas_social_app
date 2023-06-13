@@ -1,26 +1,31 @@
 package com.example.ucasinsta62.Fragments;
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
 
-
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
+import android.widget.EditText;
 
+import com.example.ucasinsta62.Adapter.PostAdapter;
+import com.example.ucasinsta62.Model.Post;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.example.ucasinsta62.Adapter.PostAdapter;
-import com.example.ucasinsta62.Adapter.StoryAdapter;
-import com.example.ucasinsta62.Model.Post;
-import com.example.ucasinsta62.Model.Story;
+import com.example.ucasinsta62.Adapter.UserAdapter;
+import com.example.ucasinsta62.Model.User;
 import com.example.ucasinsta62.R;
 
 import java.util.ArrayList;
@@ -32,125 +37,91 @@ public class HomeFragment extends Fragment {
     private PostAdapter postAdapter;
     private List<Post> postList;
 
-    private RecyclerView recyclerView_story;
-    private StoryAdapter storyAdapter;
-    private List<Story> storyList;
-
-    private List<String> followingList;
-
-    ProgressBar progress_circular;
+    EditText search_bar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        mLayoutManager.setReverseLayout(true);
-        mLayoutManager.setStackFromEnd(true);
-        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        search_bar = view.findViewById(R.id.search_bar);
+
         postList = new ArrayList<>();
         postAdapter = new PostAdapter(getContext(), postList);
         recyclerView.setAdapter(postAdapter);
 
-        recyclerView_story = view.findViewById(R.id.recycler_view_story);
-        recyclerView_story.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),
-                LinearLayoutManager.HORIZONTAL, false);
-        recyclerView_story.setLayoutManager(linearLayoutManager);
-        storyList = new ArrayList<>();
-        storyAdapter = new StoryAdapter(getContext(), storyList);
-        recyclerView_story.setAdapter(storyAdapter);
+        readPosts();
+        search_bar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-        progress_circular = view.findViewById(R.id.progress_circular);
+            }
 
-        checkFollowing();
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                searchPosts(charSequence.toString().toLowerCase());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         return view;
     }
 
-    private void checkFollowing(){
-        followingList = new ArrayList<>();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Follow")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child("following");
+    private void searchPosts(String s) {
+        Query query = FirebaseDatabase.getInstance().getReference("Posts").orderByChild("description")
+                .startAt(s)
+                .endAt(s + "\uf8ff");
 
-        reference.addValueEventListener(new ValueEventListener() {
+        query.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                followingList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    followingList.add(snapshot.getKey());
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                postList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Post post = snapshot.getValue(Post.class);
+                    postList.add(post);
                 }
 
-                readPosts();
-                readStory();
+                postAdapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
     }
 
-    private void readPosts(){
+    private void readPosts() {
+
+        final FirebaseUser firebasePost = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                postList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    Post post = snapshot.getValue(Post.class);
-                    for (String id : followingList){
-                        if (post.getPublisher().equals(id)){
-                            postList.add(post);
-                        }
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (search_bar.getText().toString().equals("")) {
+                    postList.clear();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Post post = snapshot.getValue(Post.class);
+
+                        postList.add(post);
+
                     }
+
+                    postAdapter.notifyDataSetChanged();
                 }
-
-                postAdapter.notifyDataSetChanged();
-                progress_circular.setVisibility(View.GONE);
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void readStory(){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Story");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                long timecurrent = System.currentTimeMillis();
-                storyList.clear();
-                storyList.add(new Story("", 0, 0, "",
-                        FirebaseAuth.getInstance().getCurrentUser().getUid()));
-                for (String id : followingList) {
-                    int countStory = 0;
-                    Story story = null;
-                    for (DataSnapshot snapshot : dataSnapshot.child(id).getChildren()) {
-                        story = snapshot.getValue(Story.class);
-                        if (timecurrent > story.getTimestart() && timecurrent < story.getTimeend()) {
-                            countStory++;
-                        }
-                    }
-                    if (countStory > 0){
-                        storyList.add(story);
-                    }
-                }
-
-                storyAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });

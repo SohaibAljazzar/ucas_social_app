@@ -55,4 +55,7 @@ dependencies {
     implementation 'com.karumi:dexter:6.2.3'
     //ucrop
     implementation 'com.github.yalantis:ucrop:2.2.6'
+
+    //Compressor
+    implementation 'id.zelory:compressor:2.1.1'
 }

@@ -68,6 +68,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:hint="Description"
+            android:textColorHint="#A39D9D"
+            android:textColor="@color/colorBlack"
             android:id="@+id/description"
             android:maxLines="5"/>
 
